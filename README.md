@@ -48,6 +48,13 @@ Is there any other snippet engine or custom format that you think should be supp
 
 ## Requirements
 - Neovim ≥ 0.7
+- (Optional) [lua-json5](https://github.com/Joakker/lua-json5) — required for parsing VSCode snippet files that contain comments (JSONC). Install it alongside snippet-converter:
+  ```lua
+  -- lazy.nvim
+  { "Joakker/lua-json5", build = "./install.sh" }
+  -- packer.nvim
+  use { "Joakker/lua-json5", run = "./install.sh" }
+  ```
 
 ## Getting started
 

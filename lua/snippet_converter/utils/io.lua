@@ -91,8 +91,13 @@ M.write_file = function(object, path)
   vim.fn.writefile(object, path)
 end
 
+local has_json5, json5 = pcall(require, "json5")
+
 M.read_json = function(path)
   local lines = table.concat(M.read_file(path), "\n")
+  if has_json5 then
+    return json5.parse(lines)
+  end
   return vim.json.decode(lines)
 end
 
