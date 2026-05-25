@@ -95,11 +95,11 @@ M.visit_node = setmetatable(M.node_visitor, {
 ---@filetypes array an array of filetypes that determine the language and path attribute
 ---@langs_per_filetype table<string, table<string>> maps a filetype to a list of language that this filetype should be active for
 ---@return string the generated string to be written
-local get_package_json_string = function(name, filetypes, langs_per_filetype)
+local get_package_json_string = function(name, filetypes, langs_per_filetype, snippet_scopes)
   local snippets = {}
   for i, ft in ipairs(filetypes) do
     snippets[i] = {
-      language = langs_per_filetype[ft] or { ft },
+      language = (snippet_scopes and snippet_scopes[ft]) or langs_per_filetype[ft] or { ft },
       path = ("./%s.json"):format(ft),
     }
   end
@@ -185,7 +185,7 @@ M.post_export = function(template_name, filetypes, output_path, context, templat
     return ft ~= "package"
   end, filetypes)
 
-  local json_string = get_package_json_string(template_name, filetypes, context.langs_per_filetype or {})
+  local json_string = get_package_json_string(template_name, filetypes, context.langs_per_filetype or {}, context.collected_scopes)
   local lines = export_utils.snippet_strings_to_lines { json_string }
   io.write_file(lines, io.get_containing_folder(output_path) .. "/package.json")
 end

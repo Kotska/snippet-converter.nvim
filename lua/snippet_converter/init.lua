@@ -254,6 +254,24 @@ local convert_snippets = function(model, snippets, context, template)
           end
           -- Store filetype in case they are needed (e.g. for creating a package.json file)
           filetypes[#filetypes + 1] = filetype
+
+          -- Collect distinct scopes from parsed snippets for package.json language field
+          if not context.collected_scopes then
+            context.collected_scopes = {}
+          end
+          local scope_set = {}
+          for _, snippet in ipairs(_snippets) do
+            if snippet.scope then
+              for _, lang in ipairs(snippet.scope) do
+                scope_set[lang] = true
+              end
+            end
+          end
+          if next(scope_set) then
+            local scope_list = vim.tbl_keys(scope_set)
+            table.sort(scope_list)
+            context.collected_scopes[filetype] = scope_list
+          end
         end
         model:complete_task(template, source_format, target_format, output_dirs, converter_errors)
       end
