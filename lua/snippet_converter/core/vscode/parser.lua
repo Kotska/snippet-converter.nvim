@@ -108,7 +108,8 @@ M.create_snippet = function(snippet_name, trigger, snippet_info, parser, parser_
   local snippet = {
     name = snippet_name,
     trigger = trigger,
-    scope = snippet_info.scope and vim.split(snippet_info.scope, ","),
+    scope = snippet_info.scope
+      and vim.tbl_map(function(s) return vim.trim(s) end, vim.split(snippet_info.scope, ",")),
     description = snippet_info.description,
     body = result,
   }
